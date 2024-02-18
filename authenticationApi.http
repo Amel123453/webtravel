@@ -1,0 +1,196 @@
+@users = http://127.0.0.1:6969/api/v1/users
+@tours = http://127.0.0.1:6969/api/v1/tours
+@review = http://127.0.0.1:6969/api/v1/reviews
+
+
+#-------------------------SIGN UP-------------------------#
+
+### Sign up an user
+# @name signupAcc3
+POST {{users}}/signup HTTP/1.1
+content-type: application/json
+
+  {
+    "name": "Indonesia",
+    "email": "indonesia@gmail.com",
+    "password":"tengteng",
+    "passwordConfirm":"tengteng"
+  }
+###  
+@tokenAcc3 = {{signupAcc3.response.body.token}}
+
+
+### Sign up an user
+# @name signupAcc2
+POST {{users}}/signup HTTP/1.1
+content-type: application/json
+
+  {
+    "name": "Bingo Doremon",
+    "email": "doRemon123@gmail.com",
+    "password":"doremonnobita",
+    "passwordConfirm":"doremonnobita"
+  }
+
+###
+@tokenAcc2 = {{signupAcc2.response.body.token}}
+
+
+#-------------------------LOG IN-------------------------#
+
+### Login and get data
+# @name acc1
+POST {{users}}/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "helenvu@tourino.com",
+  "password": "test1234"
+}
+
+
+### Login and get data
+# @name acc3
+POST {{users}}/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "alicebui@mailinator.com",
+  "password":"test1234"
+}
+
+###
+@tokenAcc3 = {{acc3.response.body.token}}
+
+
+
+
+
+### Sign up user
+POST {{users}}/signup HTTP/1.1
+content-type: application/json
+
+  {
+    "name": "Tuan Long",
+    "email": "longtuan@gmail.com",
+    "password":"12345678905",
+    "passwordConfirm":"12345678905"
+  }
+
+### Login tu lanh
+# @name admin
+POST {{users}}/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "helenvu@tourino.com",
+  "password": "test1234"
+}
+
+
+### Token tu Lanh
+#@tokenadmin = {{admin.response.body.token}}
+@tokenadmin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmNzIwZjA1ZTdiNzg0Mjk3YTBmYmMwNCIsImlhdCI6MTYwMzY4OTgyNCwiZXhwIjoxNjA0NTUzODI0fQ.elGIbGNARL6fBf2fyI0A0RH1wyz6SZq2USfCGMSJVDk
+
+
+
+#-------------------------FORGET AND RESET PASSWORD-------------------------#
+
+### forgot password
+POST {{users}}/forgotPassword HTTP/1.1
+content-type: application/json
+
+{
+  "email": "admin@tourino.com"
+}
+
+### reset Password
+# @name resetPass
+PATCH {{users}}/resetPassword/265e433de9a7c05c6005fc1ad8811f37cc8e90e32177b96f81ec06164d476c70
+content-type: application/json
+
+{
+  "password":"12345678905",
+  "passwordConfirm": "12345678905"
+}
+
+### Token reset Pass
+@tokenResetPass = {{resetPass.response.body.token}}
+
+
+#======================ACTION AFTER AUTHENTICATION======================#
+
+### Set Token
+@token = {{tokenadmin}}
+
+#--------------------------------------------------------------------------#
+
+### Get all tour
+GET {{tours}} HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get a tour
+GET {{tours}}/5f8832e382f98c24ad5e4aa8 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get a tour by slug
+GET {{tours}}/slug/vietnam-express-southbound-2gkam HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Delete tour - admin
+DELETE {{tours}}/5f7462b2b86dc1797ccf7ef1 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Update tour
+PATCH {{tours}}/5e466b62ad55dd18c237a467 HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+   "guides":["5dc8c3ee683a62215377d263","5dc8cf37af9ca927482f561b","5dca1fd061eb9c32b7d54a5a"]
+}
+
+### Update Password
+PATCH {{users}}/updateMyPassword HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "oldPassword":"1234567890555",
+  "newPassword":"12345678905",
+  "passwordConfirm": "12345678905"
+}
+
+
+### Update Me
+PATCH {{users}}/updateMe HTTP/1.1
+content-type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Choi Lon choi bo",
+  "active": "true"
+}
+
+### User Delete him/her self
+
+DELETE {{users}}/deleteMe HTTP/1.1
+Authorization: Bearer {{token}}
+
+
+### Get all users
+GET {{users}}?limit=100 HTTP/1.1
+Authorization: Bearer {{token}}
+
+### Get all users
+GET {{users}}?page=3 HTTP/1.1
+Authorization: Bearer {{token}}
+
+
+### Delete user
+DELETE {{users}}/5f218b535d0f071a3a2681dc HTTP/1.1
+
+
+### Abour Me
+GET {{users}}/me
+Authorization: Bearer {{token}}

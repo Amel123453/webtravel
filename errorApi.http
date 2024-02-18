@@ -1,0 +1,96 @@
+@users = http://127.0.0.1:6969/api/v1/users
+
+
+@baseUrl = http://127.0.0.1:6969/api/v1/tours
+
+### Wrong URL
+GET http://127.0.0.1:6969/api/v10/tours
+
+###Wrong URL 2
+GET {{baseUrl}}/monthly-splan/:2021
+
+### Get monthly plan on year 2021
+GET {{baseUrl}}/monthly-plan/:2021 HTTP/1.1
+
+### Alias top 5 tours
+GET {{baseUrl}}/top-five-tours HTTP/1.1
+
+### Get tour stats
+GET {{baseUrl}}/tour-stats HTTP/1.1
+
+### Get all tour
+GET {{baseUrl}} HTTP/1.1
+
+### Get a tour
+GET {{baseUrl}}/5e466b62ad55dd18c237a467 HTTP/1.1
+
+### Get a tour with wrong ID
+GET {{baseUrl}}/aaaaaaaaaaaaaaa HTTP/1.1
+
+### Get a tour with valid ID ( but not exist ) - 404
+GET {{baseUrl}}/5d99ad17cbc74c33e46d9c60 HTTP/1.1
+
+
+### Post a duplicate tour
+POST {{baseUrl}} HTTP/1.1
+content-type: application/json
+
+  {
+    "name": "Ha Nam Bay",
+    "duration": 5,
+    "maxGroupSize": 20,
+    "difficulty": "medium",
+    "rating": 4.7,
+    "ratingsQuantity": 35,
+    "price": 456,
+    "summary": "Breathtaking hike through the Canadian Banff National Park",
+    "description": "Do anim qui proident enim est voluptate ullamco id excepteur eu eiusmod. Reprehenderit irure velit in anim ea eu elit in mollit laborum aliquip quis in. Magna fugiat adipisicing culpa voluptate sint tempor consequat ad velit mollit dolore tempor est ullamco. Esse cupidatat et anim est incididunt sunt enim officia dolore voluptate nostrud. Non excepteur reprehenderit id cupidatat minim dolor est ea deserunt. Velit velit eu laboris veniam sunt laboris ea magna. Lorem ut fugiat ea veniam mollit deserunt excepteur eiusmod minim incididunt cillum aute.",
+    "imageCover": "tour-1-cover.jpg",
+    "images": ["tour-1-1.jpg", "tour-1-2.jpg", "tour-1-3.jpg"],
+    "startDates": ["2021-07-20,10:00", "2021-09-10,10:00", "2021-11-05,10:00"]
+  }
+
+### filter wrong query
+GET {{baseUrl}}?duration[gt]=5&difficulty=vietnam  HTTP/1.1
+
+### sort query					
+GET {{baseUrl}}?sort=-price HTTP/1.1
+
+### select fields
+GET {{baseUrl}}
+?fields=name,duration,difficulty,price
+#,-_id
+
+### Pagination
+GET {{baseUrl}}?limit=6&page=1 HTTP/1.1
+
+
+							
+### Update tour with valid ID ( but not exist ) - 404
+PATCH {{baseUrl}}/5d99ad17cbc74c33e46d9c90 HTTP/1.1
+content-type: application/json
+
+{
+	"name": "Ha Long Boi Loi",
+  "price": "1999"
+}
+
+### Update tour with many data not valid
+PATCH {{baseUrl}}/5d99ad17cbc74c33e46d9c54 HTTP/1.1
+content-type: application/json
+
+{
+	"name": "Ha",
+  "difficulty": "very very hard",
+  "rating":7
+}
+					
+
+### Delete tour with valid ID ( but not exist ) - 404
+DELETE {{baseUrl}}/5d943906721ba4595616e999 HTTP/1.1
+					
+
+### Wrong Token
+
+GET {{users}}/me
+Authorization: Bearer 123456
